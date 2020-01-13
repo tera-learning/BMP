@@ -32,15 +32,30 @@ struct Color {
 	unsigned char green;
 	unsigned char red;
 };
+
+struct NewBitMapHeader {
+	int width;
+	int height;
+};
 #pragma pack()
 
-int main(void)
+int main(int argc, char* argv[])
 {
+	//////////////////////////////////////////////////////////
+	// 引数チェック
+	//////////////////////////////////////////////////////////
+	
+	if (argc != 3) {
+		std::cout << "argument error !" << std::endl;
+		return 0;
+	}
+
+
 	//////////////////////////////////////////////////////////
 	// ファイルからデータ取得
 	//////////////////////////////////////////////////////////
 	
-	std::ifstream ifs("Image.bmp", std::ios::binary);
+	std::ifstream ifs(argv[1], std::ios::binary);
 	if ( !ifs) {
 		std::cout << "in file open error !" << std::endl;
 		return 0;
@@ -54,27 +69,26 @@ int main(void)
 
 
 	//////////////////////////////////////////////////////////
-	// データ変換＆ファイル出力
+	// フォーマット変換＆ファイル出力
 	//////////////////////////////////////////////////////////
 
-	std::ofstream ofs("NegaPosi.bmp", std::ios::binary);
+	NewBitMapHeader newHeader;
+
+	newHeader.width = infoHeader.biWidth;
+	newHeader.height = infoHeader.biHeight;
+
+	std::ofstream ofs(argv[2], std::ios::binary);
 	if (!ofs) {
 		std::cout << "out file open error !" << std::endl;
 	}
 
-	ofs.write((char*)&fileHeader, sizeof(BitMapFileHeader));
-	ofs.write((char*)&infoHeader, sizeof(BitMapInfoHeader));
+	ofs.write((char*)&newHeader, sizeof(NewBitMapHeader));
 
 	for (int j = 0; j < infoHeader.biHeight; j++) {
 		for (int i = 0; i < infoHeader.biWidth; i++) {
 
 			Color col;
 			ifs.read((char*)&col, sizeof(Color));
-
-			col.blue = 255 - col.blue;
-			col.green = 255 - col.green;
-			col.red = 255 - col.red;
-
 			ofs.write((char*)&col, sizeof(Color));
 		}
 	}

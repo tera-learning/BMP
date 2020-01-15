@@ -1,32 +1,34 @@
 #include "TextureManager.h"
-
-
+#include <fstream>
+#include <iostream>
 
 TextureManager::TextureManager()
 {
-	m_Width = 2;
-	m_Height = 2;
+	std::ifstream ifs("Image.nbmp", std::ios::binary);
+	if (!ifs) {
+		std::cout << "in file open error !" << std::endl;
+		return;
+	}
+
+	NewBitMapHeader fileHeader;
+	ifs.read((char*)&fileHeader, sizeof(NewBitMapHeader));
+
+	m_Width = fileHeader.width;
+	m_Height = fileHeader.height;
 	m_PixelByte = 4;
 
-	m_Buffer.push_back(0);
-	m_Buffer.push_back(0);
-	m_Buffer.push_back(255);
-	m_Buffer.push_back(255);
+	for (int j = 0; j < m_Height; j++) {
+		for (int i = 0; i < m_Width; i++) {
 
-	m_Buffer.push_back(0);
-	m_Buffer.push_back(255);
-	m_Buffer.push_back(0);
-	m_Buffer.push_back(255);
+			Color col;
+			ifs.read((char*)&col, sizeof(Color));
 
-	m_Buffer.push_back(255);
-	m_Buffer.push_back(0);
-	m_Buffer.push_back(0);
-	m_Buffer.push_back(255);
-
-	m_Buffer.push_back(255);
-	m_Buffer.push_back(255);
-	m_Buffer.push_back(255);
-	m_Buffer.push_back(255);
+			m_Buffer.push_back(col.red);
+			m_Buffer.push_back(col.green);	
+			m_Buffer.push_back(col.blue);
+			m_Buffer.push_back(255);
+		}
+	}
 }
 
 

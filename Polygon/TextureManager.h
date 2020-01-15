@@ -1,6 +1,19 @@
 #pragma once
 #include <vector>
 
+#pragma pack(1)
+struct NewBitMapHeader {
+	int width;
+	int height;
+};
+
+struct Color {
+	unsigned char blue;
+	unsigned char green;
+	unsigned char red;
+};
+#pragma pack()
+
 class TextureManager final
 {
 private:

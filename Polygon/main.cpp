@@ -94,7 +94,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//クライアント領域の中心座標
 	CPoint center = crect.CenterPoint();
 	//描画したい四角形のピクセル座標
-	CRect pixel(200, 100, 400, 300);
+	CRect pixel(0, 0, 400, 400);
 
 	dx11Manager.AddVertex({ {pixel.left, pixel.top}, {0.0f, 1.0f, 0.0f, 1.0f}, {0.0f, 0.0f} });
 	dx11Manager.AddVertex({ {pixel.right, pixel.top}, {0.0f, 1.0f, 0.0f, 1.0f}, {1.0f, 0.0f} });

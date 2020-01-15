@@ -98,11 +98,11 @@ int main(int argc, char* argv[])
 	}
 
 	// 画像データ部分出力
-	int size = infoHeader.biHeight * infoHeader.biWidth;
-	
-	for (int i = 0; i < size; i++) {
-		Color col = tmpBuffer[size - i - 1];
-		ofs.write((char*)&col, sizeof(Color));
+	for (int j = infoHeader.biHeight - 1; j >= 0; j--) {
+		for (int i = 0; i < infoHeader.biWidth; i++) {
+			Color col = tmpBuffer[j * infoHeader.biWidth + i];
+			ofs.write((char*)&col, sizeof(Color));
+		}
 	}
 
 	// データクリア

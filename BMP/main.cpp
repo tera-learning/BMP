@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iostream>
+#include <vector>
 
 //////////////////////////////////////////////////////////
 // 構造体宣言
@@ -72,27 +73,39 @@ int main(int argc, char* argv[])
 	// フォーマット変換＆ファイル出力
 	//////////////////////////////////////////////////////////
 
-	NewBitMapHeader newHeader;
-
-	newHeader.width = infoHeader.biWidth;
-	newHeader.height = infoHeader.biHeight;
-
 	std::ofstream ofs(argv[2], std::ios::binary);
 	if (!ofs) {
 		std::cout << "out file open error !" << std::endl;
 	}
 
+	NewBitMapHeader newHeader;
+	newHeader.width = infoHeader.biWidth;
+	newHeader.height = infoHeader.biHeight;
+
+	// ヘッダ出力
 	ofs.write((char*)&newHeader, sizeof(NewBitMapHeader));
+
+	// 画像データ部分取得
+	std::vector<Color> tmpBuffer;
 
 	for (int j = 0; j < infoHeader.biHeight; j++) {
 		for (int i = 0; i < infoHeader.biWidth; i++) {
 
 			Color col;
 			ifs.read((char*)&col, sizeof(Color));
-			ofs.write((char*)&col, sizeof(Color));
+			tmpBuffer.push_back(col);
 		}
 	}
-	
 
+	// 画像データ部分出力
+	int size = infoHeader.biHeight * infoHeader.biWidth;
+	
+	for (int i = 0; i < size; i++) {
+		Color col = tmpBuffer[size - i - 1];
+		ofs.write((char*)&col, sizeof(Color));
+	}
+
+	// データクリア
+	tmpBuffer.clear();
 	return 0;
 }

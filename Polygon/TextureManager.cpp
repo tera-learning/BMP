@@ -23,9 +23,9 @@ TextureManager::TextureManager()
 			Color col;
 			ifs.read((char*)&col, sizeof(Color));
 
-			m_Buffer.push_back(col.red);
-			m_Buffer.push_back(col.green);	
 			m_Buffer.push_back(col.blue);
+			m_Buffer.push_back(col.green);
+			m_Buffer.push_back(col.red);
 			m_Buffer.push_back(255);
 		}
 	}

@@ -21,8 +21,11 @@ TextureManager::TextureManager()
 		for (int i = 0; i < m_Width; i++) {
 
 			Color col;
+
+			//ファイルを細かく読みにいかない。sizeを取得して一括でよむ
 			ifs.read((char*)&col, sizeof(Color));
 
+			//アロケーションが頻繁にはしってしまうので、vectorも一括でサイズを確保しておく
 			m_Buffer.push_back(col.blue);
 			m_Buffer.push_back(col.green);
 			m_Buffer.push_back(col.red);

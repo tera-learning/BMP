@@ -34,6 +34,12 @@ struct Color {
 	unsigned char red;
 };
 
+struct NewColor {
+	unsigned char red;
+	unsigned char green;
+	unsigned char blue;
+	unsigned char alpha;
+};
 struct NewBitMapHeader {
 	int width;
 	int height;
@@ -86,22 +92,29 @@ int main(int argc, char* argv[])
 	ofs.write((char*)&newHeader, sizeof(NewBitMapHeader));
 
 	// 画像データ部分取得
-	std::vector<Color> tmpBuffer;
+	std::vector<NewColor> tmpBuffer;
 
 	for (int j = 0; j < infoHeader.biHeight; j++) {
 		for (int i = 0; i < infoHeader.biWidth; i++) {
 
 			Color col;
+			NewColor ncol;
 			ifs.read((char*)&col, sizeof(Color));
-			tmpBuffer.push_back(col);
+
+			ncol.red = col.red;
+			ncol.green = col.green;
+			ncol.blue = col.blue;
+			ncol.alpha = 255;
+
+			tmpBuffer.push_back(ncol);
 		}
 	}
 
 	// 画像データ部分出力
 	for (int j = infoHeader.biHeight - 1; j >= 0; j--) {
 		for (int i = 0; i < infoHeader.biWidth; i++) {
-			Color col = tmpBuffer[j * infoHeader.biWidth + i];
-			ofs.write((char*)&col, sizeof(Color));
+			NewColor col = tmpBuffer[j * infoHeader.biWidth + i];
+			ofs.write((char*)&col, sizeof(NewColor));
 		}
 	}
 
